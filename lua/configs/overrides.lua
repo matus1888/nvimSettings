@@ -9,11 +9,12 @@ M.treesitter = {
     "javascript",
     "typescript",
     "tsx",
-    "c",
+    -- "c",
     "markdown",
     "markdown_inline",
-    "prisma",
-    "go",
+    "graphql"
+    -- "prisma",
+    -- "go",
   },
   indent = {
     enable = true,
@@ -41,7 +42,7 @@ M.mason = {
 M.nvimtree = {
   git = {
     enable = true,
-    timeout = 600,
+    timeout = 900,
   },
   --
   -- renderer = {

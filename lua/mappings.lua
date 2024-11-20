@@ -18,7 +18,9 @@ map("n", "<leader>gt", ":DiffviewToggleFile<CR>", { desc = "Git File History" })
 map("n", "<leader>gh", ":BlameToggle<CR>", { desc = "Git File inline History" })
 map("n", "<leader>gk", ":Floggit<CR>", { desc = "Open Commit options" })
 map("n", "<leader>gfa",":Git fetch origin --recurse-submodules=no --progress --prune<CR>")
-map("n", "<leader>gp",":Git push<CR>")
+map("n", "<leader>gp",":Git push<CR>", { desc = "git push"})
+map("n", "<leader>gP",":Git push --force<CR>", { desc = "git push with force option"})
+map("n", "<leader>gC",":Telescope conventional_commits<CR>", { desc = "git conventional commit"})
 
 -- Terminal
 map("n", "<C-]>", function()

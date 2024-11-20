@@ -57,6 +57,7 @@ return {
         "css",
         "typescript",
         "javascript",
+        "graphql",
         -- "go",
       },
     },
@@ -255,8 +256,14 @@ return {
       require('blame').setup {}
     end,
   },
-  -- {
-  --"Exafunction/codeium.vim",
-  --lazy = false,
-  --},
+  {
+    "jparise/vim-graphql",
+    lazy = false,
+  },
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
+  },
+  { "matus1888/telescope-cc.nvim" }
 }

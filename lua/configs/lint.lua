@@ -10,3 +10,6 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     require("lint").try_lint()
   end,
 })
+
+-- graphqlfiletypes add
+
