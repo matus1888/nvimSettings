@@ -63,6 +63,10 @@ return {
     },
   },
   {
+    "airblade/vim-gitgutter",
+    lazy = false,
+  },
+  {
     "mfussenegger/nvim-lint",
     lazy = false,
     config = function()

@@ -12,6 +12,7 @@ map("n", "\\", "<cmd>:vsplit <CR>", { desc = "Vertical Split" })
 
 -- Git
 map("n", "<leader>gl", ":Flog<CR>", { desc = "Git Log" })
+map("n", "ghu", ":GitGutterUndoHunk<CR>", { desc = "Git hunk reset" })
 map("n", "<leader>gf", ":DiffviewFileHistory<CR>", { desc = "Git File History" })
 map("n", "<leader>gc", ":DiffviewOpen HEAD~1<CR>", { desc = "Git Last Commit" })
 map("n", "<leader>gt", ":DiffviewToggleFile<CR>", { desc = "Git File History" })
@@ -52,6 +53,42 @@ map("n", "<leader>fif", function()
   require("telescope.builtin").live_grep { cwd = cwd }
 end, { desc = "find at cursor directory" }
 )
+
+-- Генерация объекта словаря на основе директории
+map("n", "<leader>god", ":lua run_node_script()<CR>", { desc = "generate i18n dictionary object"} )
+
+
+function run_node_script()
+    -- Получите путь к директории конфигурации Neovim
+    local config_path = vim.fn.stdpath('config')
+    local cwd = require("nvim-tree.api").tree.get_node_under_cursor().absolute_path
+
+    -- Укажите путь к вашему Node.js скрипту относительно директории конфигурации
+    local script_path = config_path .. "/lua/scratches/genObj.js"  -- Замените на имя вашего скрипта
+
+    -- Запуск скрипта с помощью vim.fn.system и получение вывода
+    local output = vim.fn.system("node " .. script_path .. " " .. cwd)
+
+    -- Обработка ошибок, если скрипт не выполнился
+    if vim.v.shell_error ~= 0 then
+        print("Error running script: " .. output)
+        return
+    end
+
+    -- Создание нового буфера
+    vim.cmd("tabnew")
+
+    -- Настройка буфера как временного
+    vim.bo.buftype = "nofile"
+    vim.bo.bufhidden = "wipe"
+
+    vim.api.nvim_buf_set_option(0, "filetype", "javascript")
+    -- Вставка вывода в новый буфер
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(output, "\n"))
+
+    -- Печать уведомления
+    print("Output written to new buffer")
+end
 
 --
 -- TODO Сделай чтобы нормально работало
