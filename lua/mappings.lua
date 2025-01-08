@@ -64,10 +64,14 @@ function run_node_script()
     local cwd = require("nvim-tree.api").tree.get_node_under_cursor().absolute_path
 
     -- Укажите путь к вашему Node.js скрипту относительно директории конфигурации
-    local script_path = config_path .. "/lua/scratches/genObj.js"  -- Замените на имя вашего скрипта
+    -- local script_path = config_path .. "/lua/scratches/genObj.js"  -- Замените на имя вашего скрипта
+    -- не рабочая конструкция
+    local script_path = config_path .. "/lua/scratches/main/main"  -- Замените на имя вашего скрипта
 
     -- Запуск скрипта с помощью vim.fn.system и получение вывода
-    local output = vim.fn.system("node " .. script_path .. " " .. cwd)
+    -- local output = vim.fn.system("node " .. script_path .. " " .. cwd)
+    -- не рабочая конструкция
+    local output = vim.fn.system(script_path .. " " .. cwd)
 
     -- Обработка ошибок, если скрипт не выполнился
     if vim.v.shell_error ~= 0 then
