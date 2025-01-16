@@ -68,7 +68,7 @@ function run_node_script()
   -- Укажите путь к вашему Node.js скрипту относительно директории конфигурации
   -- local script_path = config_path .. "/lua/scratches/genObj.js"  -- Замените на имя вашего скрипта
   -- не рабочая конструкция
-  local script_path = config_path .. "/lua/scratches/main/main"   -- Замените на имя вашего скрипта
+  local script_path = config_path .. "/lua/scratches/main/main" -- Замените на имя вашего скрипта
 
   -- Запуск скрипта с помощью vim.fn.system и получение вывода
   -- local output = vim.fn.system("node " .. script_path .. " " .. cwd)
@@ -120,11 +120,11 @@ function ReplaceStringsWithTranslation()
   local existing_pattern = "t%('([^']+)',"
 
   -- Переменная для подстановки в конструкцию
-  local text_mark = current_file_name   -- по умолчанию
+  local text_mark = current_file_name -- по умолчанию
 
   -- Поиск ближайшей метки к текущей строке
   local closest_mark = nil
-  local closest_distance = math.huge   -- начальное значение - бесконечность
+  local closest_distance = math.huge -- начальное значение - бесконечность
 
   for i, line in ipairs(lines) do
     line:gsub(existing_pattern, function(mark)
@@ -141,9 +141,9 @@ function ReplaceStringsWithTranslation()
   -- Если метка найдена, обрезаем до последней точки, если нужно
   if closest_mark then
     if closest_mark:find("%.") then
-      closest_mark = closest_mark:match("(.+)%..*$")       -- обрезаем до последней точки
+      closest_mark = closest_mark:match("(.+)%..*$") -- обрезаем до последней точки
     end
-    text_mark = closest_mark                               -- обновляем text_mark
+    text_mark = closest_mark                         -- обновляем text_mark
   end
 
   -- Определяем шаблон для поиска строковых данных
@@ -162,124 +162,125 @@ function ReplaceStringsWithTranslation()
   local lN = vim.fn.line('.')
   local cL = vim.fn.getline(lN)
   local new_cursor_position = string.find(cL, "'%,")
-  vim.fn.cursor(line_number, new_cursor_position)   -- Плюс 1 для установки перед "',"
+  vim.fn.cursor(line_number, new_cursor_position) -- Плюс 1 для установки перед "',"
   vim.cmd('startinsert')
 end
 
 function open_translation_file()
-    -- Получаем текущую строку и номер строки курсора
-    local current_line_num = vim.fn.line('.')
-    local line = vim.fn.getline(current_line_num)
+  -- Получаем текущую строку и номер строки курсора
+  local current_line_num = vim.fn.line('.')
+  local line = vim.fn.getline(current_line_num)
 
-    -- Находим dictionary_name по шаблону
-    local trans_pattern = "const%s*{[%s\t]*t[%s\t]*}[%s\t]*=%s*useTranslation%(['\"]([%w%.%_%-%s]+)['\"]%);"
-    local dictionary_name = nil
+  -- Находим dictionary_name по шаблону
+  local trans_pattern = "const%s*{[%s\t]*t[%s\t]*}[%s\t]*=%s*useTranslation%(['\"]([%w%.%_%-%s]+)['\"]%);"
+  local dictionary_name = nil
 
-    -- Проходим по всем строкам текущего буфера, чтобы найти dictionary_name
-    for i = 1, vim.fn.line('$') do
-        local search_line = vim.fn.getline(i)
-        local name = search_line:match(trans_pattern)
-        if name then
-            dictionary_name = name
-            break
-        end
+  -- Проходим по всем строкам текущего буфера, чтобы найти dictionary_name
+  for i = 1, vim.fn.line('$') do
+    local search_line = vim.fn.getline(i)
+    local name = search_line:match(trans_pattern)
+    if name then
+      dictionary_name = name
+      break
     end
+  end
 
-    if not dictionary_name then
-        print("Словарь не найден!")
-        return
+  if not dictionary_name then
+    print("Словарь не найден!")
+    return
+  end
+  print(dictionary_name)
+
+  -- Определяем путь для 't'
+  local path = line:match("t%s*%('([^',]+)")
+  if not path then
+    print("Путь не найден!")
+    path = ""
+  end
+  print("path = " .. path)
+
+  local translation_file = dictionary_name .. ".js"
+
+  -- Печатаем информацию об искомом файле
+  print("Искомый файл перевода: " .. translation_file)
+
+  -- Получение списка файлов из .gitignore
+  local git_ignore_files = {}
+  local git_ignore_path = vim.fn.getcwd() .. '/.gitignore'
+
+  -- Чтение gitignore
+  if vim.fn.filereadable(git_ignore_path) then
+    for c_line in io.lines(git_ignore_path) do
+      if c_line ~= '' and not c_line:match("^#") then       -- Игнорировать пустые строки и комментарии
+        table.insert(git_ignore_files, c_line)
+      end
     end
+  end
 
-    -- Определяем путь для 't'
-    local path = line:match("t%s*%('([^',]+)")
+  -- Формируем шаблон для поиска, исключая файлы из git ignore
+  local search_pattern = "**/" .. translation_file
+  local file_found = false
+  local existing_buffer = nil
 
-    if not path then
-        print("Путь не найден!")
-        return
+  -- Проверяем, открыт ли файл в текущих буферах
+  for _, buf in ipairs(vim.fn.getbufinfo('%')) do
+    if buf.name == vim.fn.expand('%:p:h') .. '/' .. translation_file then
+      existing_buffer = buf.bufnr
+      break
     end
+  end
 
-    local translation_file = dictionary_name .. ".js"
-
-    -- Печатаем информацию об искомом файле
-    print("Искомый файл перевода: " .. translation_file)
-
-    -- Получение списка файлов из .gitignore
-    local git_ignore_files = {}
-    local git_ignore_path = vim.fn.getcwd() .. '/.gitignore'
-
-    -- Чтение gitignore
-    if vim.fn.filereadable(git_ignore_path) then
-        for c_line in io.lines(git_ignore_path) do
-            if c_line ~= '' and not c_line:match("^#") then  -- Игнорировать пустые строки и комментарии
-                table.insert(git_ignore_files, c_line)
-            end
-        end
-    end
-
-    -- Формируем шаблон для поиска, исключая файлы из git ignore
-    local search_pattern = "**/" .. translation_file
-    local file_found = false
-    local existing_buffer = nil
-
-    -- Проверяем, открыт ли файл в текущих буферах
-    for _, buf in ipairs(vim.fn.getbufinfo('%')) do
-        if buf.name == vim.fn.expand('%:p:h') .. '/' .. translation_file then
-            existing_buffer = buf.bufnr
-            break
-        end
-    end
-
-    -- Если файл уже открыт, переключаемся на него
-    if existing_buffer then
-        vim.cmd("buffer " .. existing_buffer)
-        print("Файл перевода уже открыт. Переключение на него.")
-        -- Переход к первому совпадению
-        return
-    end
-
-    -- Если файл не открыт, продолжаем поиск
-    for _, c_path in ipairs(vim.fn.glob(search_pattern, true, true)) do
-        local is_ignored = false
-        for _, ignored in ipairs(git_ignore_files) do
-            if vim.fn.globpath(vim.fn.getcwd(), c_path):match(ignored) then
-                is_ignored = true
-                break
-            end
-        end
-
-        if not is_ignored then
-            print("Найден файл: " .. c_path)
-            file_found = true
-
-            -- Открываем файл перевода в вертикальном сплите
-            vim.cmd("vsplit " .. c_path)
-            -- Перейдем в конец файла после открытия
-            -- vim.cmd("normal! G")
-            break
-        end
-    end
-
-    if not file_found then
-        print("Файл перевода не найден!")
-        return
-    end
-
-    -- Поиск перевода по пути. Если путь составной, ищем последний 'field'.
-    local fields = {}
-    for field in path:gmatch("([^%.]+)") do
-        table.insert(fields, field)
-    end
-
-    local last_field = fields[#fields]
-
-    -- Используем команду для поиска
-    vim.cmd("normal! /" .. last_field .. "<CR>")
-
-    -- Подсветка всех совпадений
-    vim.fn.matchadd('Search', last_field)
-
+  -- Если файл уже открыт, переключаемся на него
+  if existing_buffer then
+    vim.cmd("buffer " .. existing_buffer)
+    print("Файл перевода уже открыт. Переключение на него.")
     -- Переход к первому совпадению
-    vim.cmd("normal! n")
+    return
+  end
 
-    print("Открыт файл перевода, искомый путь: " .. path)
+  -- Если файл не открыт, продолжаем поиск
+  for _, c_path in ipairs(vim.fn.glob(search_pattern, true, true)) do
+    local is_ignored = false
+    for _, ignored in ipairs(git_ignore_files) do
+      if vim.fn.globpath(vim.fn.getcwd(), c_path):match(ignored) then
+        is_ignored = true
+        break
+      end
+    end
+
+    if not is_ignored then
+      print("Найден файл: " .. c_path)
+      file_found = true
+
+      -- Открываем файл перевода в вертикальном сплите
+      vim.cmd("vsplit " .. c_path)
+      -- Перейдем в конец файла после открытия
+      -- vim.cmd("normal! G")
+      break
+    end
+  end
+
+  if not file_found then
+    print("Файл перевода не найден!")
+    return
+  end
+
+  -- Поиск перевода по пути. Если путь составной, ищем последний 'field'.
+  local fields = {}
+  for field in path:gmatch("([^%.]+)") do
+    table.insert(fields, field)
+  end
+
+  local last_field = fields[#fields]
+
+  -- Используем команду для поиска
+  vim.cmd("normal! /" .. last_field .. "<CR>")
+
+  -- Подсветка всех совпадений
+  vim.fn.matchadd('Search', last_field)
+
+  -- Переход к первому совпадению
+  vim.cmd("normal! n")
+
+  print("Открыт файл перевода, искомый путь: " .. path)
 end
