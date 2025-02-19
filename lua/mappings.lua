@@ -1,7 +1,9 @@
 require "nvchad.mappings"
+require "scratches.lua.calculate_time_ranges"
 
 local map = vim.keymap.set
 
+map("n", "<leader>ct" ,":lua calculate_time_ranges()<CR>", { desc = "calc timescheets"} )
 map("n", "<leader>w", "<cmd>w<CR>", { desc = "Save" })
 map("n", "<leader>cx", function()
   require("nvchad.tabufline").closeAllBufs()
