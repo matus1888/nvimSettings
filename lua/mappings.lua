@@ -26,6 +26,7 @@ map("n", "<leader>gP", ":Git push --force<CR>", { desc = "git push with force op
 map("n", "<leader>gC", ":Telescope conventional_commits<CR>", { desc = "git conventional commit" })
 map("n", "<leader>tt", ":lua ReplaceStringsWithTranslation()<CR>", { desc = "generate translation i18n syntax" })
 map("n", "<leader>gtt", ":lua open_translation_file()<CR>", { desc = "go to translation" })
+map("n", "ga", ":lua git_add()<CR>", { desc = "git add in tree mode" })
 
 -- Terminal
 map("n", "<C-]>", function()
@@ -285,4 +286,28 @@ function open_translation_file()
   vim.cmd("normal! n")
 
   print("Открыт файл перевода, искомый путь: " .. path)
+end
+
+local api = require("nvim-tree.api")
+
+git_add = function()
+  local node = api.tree.get_node_under_cursor()
+  local gs = node.git_status.file
+
+  -- If the current node is a directory get children status
+  if gs == nil then
+    gs = (node.git_status.dir.direct ~= nil and node.git_status.dir.direct[1]) 
+         or (node.git_status.dir.indirect ~= nil and node.git_status.dir.indirect[1])
+  end
+
+  -- If the file is untracked, unstaged or partially staged, we stage it
+  if gs == "??" or gs == "MM" or gs == "AM" or gs == " M" then
+    vim.cmd("silent !git add " .. node.absolute_path)
+
+  -- If the file is staged, we unstage
+  elseif gs == "M " or gs == "A " then
+    vim.cmd("silent !git restore --staged " .. node.absolute_path)
+  end
+
+  api.tree.reload()
 end
