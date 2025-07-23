@@ -23,6 +23,11 @@ return {
     opts = {},
   },
   {
+    'nvim-pack/nvim-spectre',
+    lazy = false,
+    opts = {},
+  },
+  {
     "neovim/nvim-lspconfig",
     config = function()
       require("nvchad.configs.lspconfig").defaults()

@@ -27,7 +27,10 @@ map("n", "<leader>gC", ":Telescope conventional_commits<CR>", { desc = "git conv
 map("n", "<leader>tt", ":lua ReplaceStringsWithTranslation()<CR>", { desc = "generate translation i18n syntax" })
 map("n", "<leader>gtt", ":lua open_translation_file()<CR>", { desc = "go to translation" })
 map("n", "ga", ":lua git_add()<CR>", { desc = "git add in tree mode" })
-
+map('n', '<leader>S', ':lua require("spectre").toggle()<CR>', { desc = "Toggle Spectre" })
+map('n', '<leader>sw', ':lua require("spectre").open_visual({select_word=true})<CR>', { desc = "Search current word" })
+map('v', '<leader>sw', '<esc>:lua require("spectre").open_visual()<CR>', { desc = "Search current word" })
+map('n', '<leader>sp', ':lua require("spectre").open_file_search({select_word=true})<CR>', { desc = "Search on current file" })
 -- Terminal
 map("n", "<C-]>", function()
   require("nvchad.term").toggle { pos = "vsp", size = 0.4 }
