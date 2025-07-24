@@ -7,7 +7,7 @@ local capabilities = configs.capabilities
 local lspconfig = require "lspconfig"
 
 -- if you just want default config for the servers then put them in a table
-local servers = { "html", "cssls", "tsserver", "eslint", "graphql" }
+local servers = { "html", "cssls", "ts_ls", "eslint", "graphql" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
 local function organize_imports()

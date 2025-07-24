@@ -3,6 +3,7 @@ require "scratches.lua.calculate_time_ranges"
 
 local map = vim.keymap.set
 
+map("n", "<leader>ca" ,":lua vim.lsp.buf.code_action()<CR>", { desc = "code actions"} )
 map("n", "<leader>ct" ,":lua calculate_time_ranges()<CR>", { desc = "calc timescheets"} )
 map("n", "<leader>w", "<cmd>w<CR>", { desc = "Save" })
 map("n", "<leader>cx", function()
