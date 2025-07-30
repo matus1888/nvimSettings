@@ -4,6 +4,8 @@ require "scratches.lua.calculate_time_ranges"
 local map = vim.keymap.set
 
 map("n", "<leader>ca" ,":lua vim.lsp.buf.code_action()<CR>", { desc = "code actions"} )
+map("n", "<leader>oi" ,":lua vim.lsp.buf.execute_command({ command = \"_typescript.organizeImports\", arguments = { vim.api.nvim_buf_get_name(0) } })<CR>",
+  { desc = "optimize imports"} )
 map("n", "<leader>ct" ,":lua calculate_time_ranges()<CR>", { desc = "calc timescheets"} )
 map("n", "<leader>w", "<cmd>w<CR>", { desc = "Save" })
 map("n", "<leader>cx", function()
