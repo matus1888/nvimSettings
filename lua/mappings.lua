@@ -3,6 +3,7 @@ require "scratches.lua.calculate_time_ranges"
 
 local map = vim.keymap.set
 
+map("n", "<leader>F" ,":!prettier --write %<CR>", { desc = "format with global pretiier"} )
 map("n", "<leader>ca" ,":lua vim.lsp.buf.code_action()<CR>", { desc = "code actions"} )
 map("n", "<leader>oi" ,":lua vim.lsp.buf.execute_command({ command = \"_typescript.organizeImports\", arguments = { vim.api.nvim_buf_get_name(0) } })<CR>",
   { desc = "optimize imports"} )
