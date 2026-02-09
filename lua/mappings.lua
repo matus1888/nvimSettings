@@ -3,6 +3,21 @@ require "scratches.lua.calculate_time_ranges"
 
 local map = vim.keymap.set
 
+
+-- Вызов меню действий (исправить, оптимизировать, рефакторинг)
+map({ "n", "v" }, "<leader>caa", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
+
+-- Открыть/закрыть окно чата
+map({ "n", "v" }, "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
+
+-- Инлайновое изменение кода (написать код прямо в файле)
+map({ "n", "v" }, "<leader>ci", "<cmd>CodeCompanion<cr>", { noremap = true, silent = true })
+
+-- Добавить выделенный фрагмент в текущий чат
+map("v", "<leader>cad", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
+-- Заменить выделенный код результатом работы нейросети (Inline Edit)
+map("v", "<leader>cr", ":CodeCompanion<CR>", { noremap = true, silent = true })
+
 map("n", "<leader>F" ,":!prettier --write %<CR>", { desc = "format with global pretiier"} )
 map("n", "<leader>ca" ,":lua vim.lsp.buf.code_action()<CR>", { desc = "code actions"} )
 map("n", "<leader>oi" ,":lua vim.lsp.buf.execute_command({ command = \"_typescript.organizeImports\", arguments = { vim.api.nvim_buf_get_name(0) } })<CR>",

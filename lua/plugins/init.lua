@@ -308,5 +308,42 @@ return {
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     opts = {},
   },
-  { "matus1888/telescope-cc.nvim" }
+  { "matus1888/telescope-cc.nvim" },
+  {
+    "olimorris/codecompanion.nvim",
+    lazy = false,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("codecompanion").setup({
+        opts = {
+          log_level = "DEBUG",
+        },
+        interactions = {
+          chat = { adapter = "ollama" },
+          inline = { adapter = "ollama" },
+          agent = { adapter = "ollama" },
+        },
+        adapters = {
+          ollama = function()
+            return require("codecompanion.adapters").extend("ollama", {
+              schema = {
+                model = {
+                  default = "deepseek-coder:6.7b", -- лучше указывать тег целиком
+                },
+                num_ctx = {
+                  default = 32768,
+                },
+                temperature = {
+                  default = 0.1,
+                }
+              },
+            })
+          end,
+        },
+      })
+    end,
+  },
 }
