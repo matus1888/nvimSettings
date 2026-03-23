@@ -33,6 +33,7 @@ map("n", "\\", "<cmd>:vsplit <CR>", { desc = "Vertical Split" })
 
 -- Git
 map("n", "<leader>gl", ":Flog<CR>", { desc = "Git Log" })
+map("n", "<leader>fp", ":Telescope terms<CR>", { desc = "Find terminal (all, with hidden)" })
 map("n", "ghu", ":GitGutterUndoHunk<CR>", { desc = "Git hunk reset" })
 map("n", "<leader>gf", ":DiffviewFileHistory<CR>", { desc = "Git File History" })
 map("n", "<leader>gc", ":DiffviewOpen HEAD~1<CR>", { desc = "Git Last Commit" })
